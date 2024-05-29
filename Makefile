@@ -1,9 +1,5 @@
 NAME = fractol
 
-LIB = libft.a
-
-LIBDIR = ./libft/libft.a
-
 INCLUDE = fractol.h
 
 SRCS = main.c
@@ -12,23 +8,23 @@ OBJ = $(SRCS:%.c=%.o)
 
 CFLAGS = -Wall -Wextra -Werror
 
-all		:	$(NAME)
+MLXFLAGS = -L./minilibx-linux -lmlx -lXext -lX11 -lm -lbsd
 
-$(NAME)	:	$(OBJ) $(INCLUDE) $(LIB)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBDIR) -o $(NAME)
+all: $(NAME)
 
-$(LIB)	:
-	$(MAKE) -sC ./libft
+$(NAME): $(OBJ)
+	$(MAKE) -C minilibx-linux
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJ) $(MLXFLAGS)
 
-%.o		:	%.c $(INCLUDE)
+%.o: %.c $(INCLUDE)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-clean	:
+clean:
 	$(RM) $(OBJ)
 
-fclean	:	clean
+fclean: clean
 	$(RM) $(NAME)
 
-re		:	fclean all
+re: fclean all
 
-.PHONY	:	all clean fclean re
+.PHONY: all clean fclean re
