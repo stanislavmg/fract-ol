@@ -1,11 +1,11 @@
 #include "fractol.h"
 
-static double get_frct(char *s, int count)
+static double	get_frct(char *s, int count)
 {
 	double	res;
 	double	pow;
 	int		i;
-	
+
 	i = 0;
 	pow = 1;
 	res = 0;
@@ -29,7 +29,7 @@ static double get_frct(char *s, int count)
 	return (res);
 }
 
-static double get_num(char *s)
+static double	get_num(char *s)
 {
 	long	integer_part;
 	double	fraction_part;
@@ -50,6 +50,19 @@ static double get_num(char *s)
 	return (integer_part + fraction_part);
 }
 
+static void	data_init(t_fractol *fractal)
+{
+	fractal->img.data_addr = mlx_get_data_addr(fractal->img.image,
+			&fractal->img.bits_per_pixel,
+			&fractal->img.size_line,
+			&fractal->img.endian);
+	fractal->esc_v = 4.0;
+	fractal->i = 50;
+	fractal->shift_x = 0.0;
+	fractal->shift_y = 0.0;
+	fractal->factor = 1.0;
+}
+
 void	fractal_init(t_fractol *fractal)
 {
 	fractal->mlx = mlx_init();
@@ -59,7 +72,6 @@ void	fractal_init(t_fractol *fractal)
 	if (!fractal->win)
 	{
 		mlx_destroy_display(fractal->mlx);
-		//free(fractal->mlx);
 		exit_fail("mlx window init error\n");
 	}
 	fractal->img.image = mlx_new_image(fractal->mlx, WIDTH, HEIGHT);
@@ -67,16 +79,9 @@ void	fractal_init(t_fractol *fractal)
 	{
 		mlx_destroy_window(fractal->mlx, fractal->win);
 		mlx_destroy_display(fractal->mlx);
-		//free(fractal->mlx);
 		exit_fail("mlx image init error\n");
 	}
-	fractal->img.data_addr = mlx_get_data_addr(fractal->img.image, &fractal->img.bits_per_pixel,
-												&fractal->img.size_line, &fractal->img.endian);
-	fractal->esc_v = 4.0;
-	fractal->i = 50;
-	fractal->shift_x = 0.0;
-	fractal->shift_y = 0.0;
-	fractal->factor = 1.0;
+	data_init(fractal);
 }
 
 double	ft_atodbl(char *s)
@@ -87,7 +92,7 @@ double	ft_atodbl(char *s)
 	sign = 1;
 	while (ft_isspace(*s))
 		s++;
-	if ('+' == *s)	
+	if ('+' == *s)
 		s++;
 	if ('-' == *s)
 	{

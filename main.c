@@ -4,7 +4,7 @@ int	main(int ac, char **av)
 {
 	t_fractol	fractal;
 
-	if ((2 == ac && !ft_strncmp(av[1], "mandelbrot", 11)) 
+	if ((2 == ac && !ft_strncmp(av[1], "mandelbrot", 11))
 		|| (4 == ac && !ft_strncmp(av[1], "julia", 6)))
 	{
 		fractal.name = av[1];

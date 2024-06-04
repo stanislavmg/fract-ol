@@ -1,9 +1,7 @@
 #include "fractol.h"
 
-static void	get_nums(int x, int y, t_complex *z, t_complex *c, t_fractol *fractal)
+static void	get_c(t_complex *z, t_complex *c, t_fractol *fractal)
 {
-	z->re = (map(x, -2, +2, 0, WIDTH) * fractal->factor) + fractal->shift_x;
-	z->im = (map(y, +2, -2, 0, HEIGHT) * fractal->factor) + fractal->shift_y;
 	if (!ft_strncmp(fractal->name, "julia", 6))
 	{
 		c->re = fractal->jx;
@@ -20,8 +18,10 @@ int	julia_render(int x, int y, t_fractol *fractal)
 {
 	if (!ft_strncmp(fractal->name, "julia", 6))
 	{
-		fractal->jx = (map(x, -2, +2, 0, WIDTH) * fractal->factor) + fractal->shift_x;
-		fractal->jy = (map(y, +2, -2, 0, HEIGHT) * fractal->factor) + fractal->shift_y;
+		fractal->jx = (map(x, -2, +2, WIDTH) * fractal->factor)
+			+ fractal->shift_x;
+		fractal->jy = (map(y, +2, -2, HEIGHT) * fractal->factor)
+			+ fractal->shift_y;
 		fractal_render(fractal);
 	}
 	return (0);
@@ -35,13 +35,15 @@ void	draw_pixels(int x, int y, t_fractol *fractal)
 	int			color;
 
 	i = 0;
-	get_nums(x, y, &z, &c, fractal);
+	z.re = (map(x, -2, +2, WIDTH) * fractal->factor) + fractal->shift_x;
+	z.im = (map(y, +2, -2, HEIGHT) * fractal->factor) + fractal->shift_y;
+	get_c(&z, &c, fractal);
 	while (i < fractal->i)
 	{
-		z = sum_cmplx(sqrt_cmplx(z), c); // z = z^2 + c
-		if ((z.re * z.re) + (z.im * z.im) > fractal->esc_v) // a^2 + b^2 = c^2
+		z = sum_cmplx(sqrt_cmplx(z), c);
+		if ((z.re * z.re) + (z.im * z.im) > fractal->esc_v)
 		{
-			color = map(i, BLACK, WHITE, 0, fractal->i);
+			color = map(i, BLACK, WHITE, fractal->i);
 			put_pixel(x, y, &fractal->img, color);
 			return ;
 		}
@@ -72,5 +74,7 @@ void	fractal_render(t_fractol *fractal)
 			draw_pixels(x, y, fractal);
 		}
 	}
-	mlx_put_image_to_window(fractal->mlx, fractal->win, fractal->img.image, 0, 0);
+	mlx_put_image_to_window(fractal->mlx,
+		fractal->win,
+		fractal->img.image, 0, 0);
 }

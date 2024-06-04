@@ -61,7 +61,7 @@ int			events_handle(int keysym, t_fractol *fractal);
 /*** MATH UTILS ***/
 t_complex	sum_cmplx(t_complex a, t_complex b);
 t_complex	sqrt_cmplx(t_complex a);
-double		map(double unscaled_num, double new_min, double new_max, double old_min, double old_max);
+double		map(double unscaled_num, double new_min, double new_max, double old_max);
 /*** STRING UTILS ***/
 int			ft_isalpha(int c);
 int			ft_isdigit(int c);

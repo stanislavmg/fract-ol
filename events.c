@@ -4,15 +4,23 @@ int	events_init(t_fractol *fractal)
 {
 	mlx_hook(fractal->win, KeyPress, KeyPressMask, events_handle, fractal);
 	mlx_hook(fractal->win, ButtonPress, ButtonPressMask, mouse_handle, fractal);
-	mlx_hook(fractal->win, DestroyNotify, StructureNotifyMask, fractal_exit, fractal);
-	mlx_hook(fractal->win, MotionNotify, PointerMotionMask, julia_render, fractal);
+	mlx_hook(fractal->win,
+		DestroyNotify,
+		StructureNotifyMask,
+		fractal_exit,
+		fractal);
+	mlx_hook(fractal->win,
+		MotionNotify,
+		PointerMotionMask,
+		julia_render,
+		fractal);
 	return (0);
 }
 
 int	events_handle(int keysym, t_fractol *fractal)
 {
-	if(keysym == XK_Escape)
-	 	fractal_exit(fractal);
+	if (keysym == XK_Escape)
+		fractal_exit(fractal);
 	else if (keysym == XK_Right)
 		fractal->shift_x += (0.5 * fractal->factor);
 	else if (keysym == XK_Left)
@@ -46,6 +54,5 @@ int	fractal_exit(t_fractol *fractal)
 	mlx_destroy_image(fractal->mlx, fractal->img.image);
 	mlx_destroy_window(fractal->mlx, fractal->win);
 	mlx_destroy_display(fractal->mlx);
-	//free(fractal->mlx);
 	exit(EXIT_SUCCESS);
 }

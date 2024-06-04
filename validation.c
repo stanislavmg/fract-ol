@@ -45,9 +45,9 @@ int	check_arg(char *s)
 	{
 		if ('.' == s[i] && !ft_isdigit(s[i + 1]))
 			return (1);
-		if('.' == s[i] && !point)
+		else if ('.' == s[i] && !point)
 			point = 1;
-		else if('.' == s[i] && point)
+		else if ('.' == s[i] && point)
 			return (1);
 		else if (!ft_isdigit(s[i]))
 			return (1);
