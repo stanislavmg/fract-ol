@@ -1,8 +1,24 @@
 #include "fractol.h"
 
+static void	get_nums(int x, int y, t_complex *z, t_complex *c, t_fractol *fractal)
+{
+	z->re = (map(x, -2, +2, 0, WIDTH) * fractal->factor) + fractal->shift_x;
+	z->im = (map(y, +2, -2, 0, HEIGHT) * fractal->factor) + fractal->shift_y;
+	if (!ft_strncmp(fractal->name, "julia", 6))
+	{
+		c->re = fractal->jx;
+		c->im = fractal->jy;
+	}
+	else
+	{
+		c->re = z->re;
+		c->im = z->im;
+	}
+}
+
 int	julia_render(int x, int y, t_fractol *fractal)
 {
-	if (!ft_strncmp(fractal->name, "julia", 5))
+	if (!ft_strncmp(fractal->name, "julia", 6))
 	{
 		fractal->jx = (map(x, -2, +2, 0, WIDTH) * fractal->factor) + fractal->shift_x;
 		fractal->jy = (map(y, +2, -2, 0, HEIGHT) * fractal->factor) + fractal->shift_y;
@@ -10,6 +26,7 @@ int	julia_render(int x, int y, t_fractol *fractal)
 	}
 	return (0);
 }
+
 void	draw_pixels(int x, int y, t_fractol *fractal)
 {
 	t_complex	z;
@@ -18,23 +35,11 @@ void	draw_pixels(int x, int y, t_fractol *fractal)
 	int			color;
 
 	i = 0;
-	z.re = (map(x, -2, +2, 0, WIDTH) * fractal->factor) + fractal->shift_x;
-	z.im = (map(y, +2, -2, 0, HEIGHT) * fractal->factor) + fractal->shift_y;
-	if (!ft_strncmp(fractal->name, "julia", 5))
-	{
-		c.re = fractal->jx;
-		c.im = fractal->jy;
-	}
-	else
-	{
-		c.re = z.re;
-		c.im = z.im;
-	}
-	// z = z^2 + c
+	get_nums(x, y, &z, &c, fractal);
 	while (i < fractal->i)
 	{
-		z = sum_cmplx(sqrt_cmplx(z), c);
-		if ((z.re * z.re) + (z.im * z.im) > fractal->esc_v)
+		z = sum_cmplx(sqrt_cmplx(z), c); // z = z^2 + c
+		if ((z.re * z.re) + (z.im * z.im) > fractal->esc_v) // a^2 + b^2 = c^2
 		{
 			color = map(i, BLACK, WHITE, 0, fractal->i);
 			put_pixel(x, y, &fractal->img, color);
@@ -47,10 +52,10 @@ void	draw_pixels(int x, int y, t_fractol *fractal)
 
 void	put_pixel(int x, int y, t_image *img, int color)
 {
-	int	off;
+	int	offset;
 
-	off = (y * img->size_line) + (x * (img->bits_per_pixel / 8));
-	*(unsigned int *)(img->data_addr + off) = color;
+	offset = (y * img->size_line) + (x * (img->bits_per_pixel / 8));
+	*(int *)(img->data_addr + offset) = color;
 }
 
 void	fractal_render(t_fractol *fractal)

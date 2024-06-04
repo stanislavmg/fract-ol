@@ -2,7 +2,7 @@ NAME = fractol
 
 INCLUDE = fractol.h
 
-SRCS = main.c utils.c render.c events.c
+SRCS = main.c utils.c render.c events.c validation.c string.c init.c
 
 OBJ = $(SRCS:%.c=%.o)
 
